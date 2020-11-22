@@ -1,0 +1,44 @@
+Nemulescu Roxana-Elena
+322CA
+Tema 2 - PCom
+
+Pentru implementarea temei am folosit scheletul din laboratorul 8.
+In subscriber:
+    La fiecare conectare a unui client la server, am trimis datele
+    de care server-ul avea nevoie la afisarea mesajelor:
+    ID, IP si PORT.
+
+    Cand se citeste de la tastatura, avem 3 cazuri: exit, subscribe si
+    unsubscribe. La primirea mesajului "exit", se inchide conexiunea
+    si se trimite un mesaj informativ catre server.
+    Pentru celelalte doua comenzi, se trimit mesaje catre server,
+    pentru a fi interpretate.
+
+    Daca se primesc mesaje, acestea vor fi afisate.
+
+In server:
+    Serverul are rolul de a redirectiona mesajele primite de la clientii
+    udp, catre toti abonatii tcp. Cand a fost primit un mesaj de la un
+    client udp, am parsat mesajul si l-am trimis subscriberilor:
+        - daca avem clienti abonati, dar deconectati, retinem
+          mesajele pe care ar trebui sa le primeasca
+        - clientilor abonati le trimitem mesajul, in momentul sosirii acestuia
+
+    De la tastatura se poate primi doar comanda "exit", in urma careia
+    serverul inchide conexiunea cu toti clientii abonati  si se inchide si pe sine.
+
+    Daca s-au primit comenzi de la clientii tcp, le vom interpreta.
+        Daca sunt mesaje pe care clientul trebuie sa le primeasca,
+        avand in vedere deconectarea acestuia, mesajele vor fi trimise.
+        
+        Daca se primeste mesajul "INFO", inseamna ca se primesc detaliile
+        despre client. Aceste detalii se trimit o singura data, la conectare.
+
+        In caz contrar, se executa comenzile de subscribe sau unsubscribe:
+        
+        Substribe:
+            - se afiseaza un mesaj referitor la conectarea clientului
+            - se retine socket ul in vectorul topicului
+            - se retin socketii clientilor care solocita store&forward
+        Unsubscribe:
+            - se elimina din lista topicului, socketul clientului
